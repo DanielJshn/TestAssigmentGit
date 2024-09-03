@@ -2,7 +2,7 @@ namespace testProd.auth
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly DataContext _dataContext;
+        private readonly DataContext? _dataContext;
         private readonly IConfiguration _config;
         private readonly AuthHelp _authHelp;
 
@@ -13,41 +13,16 @@ namespace testProd.auth
             _authHelp = authHelp;
         }
 
-        public void CheckUser(UserAuthDto userForRegistration)
+        public User GetUserByEmail(string email)
         {
-            using (var dbContext = new DataContext(_config))
-            {
-                Console.WriteLine("sss");
-                var existingUser = dbContext.Users.FirstOrDefault(u => u.Email == userForRegistration.Email);
-                Console.WriteLine("sss2");
-                if (existingUser != null)
-                {
-                    throw new Exception("User with this email already exists!");
-                }
-                Console.WriteLine("sss3");
-            }
+            return _dataContext.Users.FirstOrDefault(u => u.Email == email);
         }
 
-        public string ReturnToken(UserAuthDto userForRegistration)
+
+        public void AddUser(User user)
         {
-            string passwordHash = _authHelp.GetPasswordHash(userForRegistration.Password);
-            Console.WriteLine("hash" + passwordHash);
-            string token = _authHelp.CreateToken(userForRegistration.Email);
-            var tokenEntity = new User
-            {
-                Username = userForRegistration.Name,
-                Email = userForRegistration.Email,
-                PasswordHash = passwordHash,
-
-            };
-
-            using (var dbContext = new DataContext(_config))
-            {
-                dbContext.Users.Add(tokenEntity);
-                dbContext.SaveChanges();
-            }
-            Console.WriteLine("token" + token);
-            return token;
+            _dataContext.Users.Add(user);
+            _dataContext.SaveChanges();
         }
 
         public void CheckEmail(UserAuthDto userForLogin)
@@ -68,7 +43,7 @@ namespace testProd.auth
             {
                 throw new Exception("Incorrect Email");
             }
-            Console.WriteLine(user );
+            Console.WriteLine(user);
 
             var userForConfirmation = _dataContext.Users
                 .Where(t => t.Email == userForLogin.Email)
@@ -78,7 +53,7 @@ namespace testProd.auth
                 })
                 .FirstOrDefault();
 
-            string inputPasswordHash = _authHelp.GetPasswordHash(userForLogin.Password );
+            string inputPasswordHash = _authHelp.GetPasswordHash(userForLogin.Password);
             if (!inputPasswordHash.SequenceEqual(userForConfirmation.PasswordHash))
             {
                 throw new Exception("Incorrect Password");

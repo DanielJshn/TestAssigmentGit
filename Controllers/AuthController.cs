@@ -8,11 +8,13 @@ namespace testProd.auth
     public class Authorization : ControllerBase
     {
         private readonly AuthHelp _authHelp;
-        private readonly AuthRepository _authRepository;
-        public Authorization(AuthHelp authHelp, AuthRepository authRepository)
+        private readonly IAuthService _authService;
+        private readonly IAuthRepository _authrep;
+        public Authorization(AuthHelp authHelp, IAuthService authService, IAuthRepository authrep)
         {
             _authHelp = authHelp;
-            _authRepository = authRepository;
+            _authService = authService;
+            _authrep = authrep;
         }
 
         [AllowAnonymous]
@@ -22,8 +24,8 @@ namespace testProd.auth
             string token;
             try
             {
-                _authRepository.CheckUser(userForRegistration);
-                token = _authRepository.ReturnToken(userForRegistration);
+                _authService.CheckUser(userForRegistration);
+                token = _authService.ReturnToken(userForRegistration);
             }
             catch (Exception ex)
             {
@@ -31,6 +33,7 @@ namespace testProd.auth
             }
             return Ok(new { Token = token });
         }
+        
 
         [AllowAnonymous]
         [HttpPost("Login")]
@@ -38,8 +41,8 @@ namespace testProd.auth
         {
             string newToken;
             {
-                _authRepository.CheckEmail(userForLogin);
-                _authRepository.CheckPassword(userForLogin);
+                _authrep.CheckEmail(userForLogin);
+                _authrep.CheckPassword(userForLogin);
                 newToken = _authHelp.GenerateNewToken(userForLogin.Email);
             }
             return Ok(new { Token = newToken });

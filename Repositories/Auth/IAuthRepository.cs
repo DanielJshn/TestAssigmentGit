@@ -2,8 +2,9 @@ namespace testProd.auth
 {
     public interface IAuthRepository
     {
-        public void CheckUser(UserAuthDto userForRegistration);
-        public string ReturnToken(UserAuthDto userForRegistration);
+        public User GetUserByEmail(string email);
+        void AddUser(User user);
         public void CheckEmail(UserAuthDto userForLogin);
+        public void CheckPassword(UserAuthDto userForLogin);
     }
 }
