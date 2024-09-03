@@ -4,5 +4,6 @@ namespace testProd.auth
     {
         public void CheckUser(UserAuthDto userForRegistration);
         public string ReturnToken(UserAuthDto userForRegistration);
+        public void CheckEmail(UserAuthDto userForLogin);
     }
 }

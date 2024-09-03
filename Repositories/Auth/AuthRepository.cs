@@ -27,7 +27,7 @@ namespace testProd.auth
                 Console.WriteLine("sss3");
             }
         }
-        
+
         public string ReturnToken(UserAuthDto userForRegistration)
         {
             string passwordHash = _authHelp.GetPasswordHash(userForRegistration.Password);
@@ -48,6 +48,43 @@ namespace testProd.auth
             }
             Console.WriteLine("token" + token);
             return token;
+        }
+
+        public void CheckEmail(UserAuthDto userForLogin)
+        {
+
+            var token = _dataContext.Users.FirstOrDefault(t => t.Email == userForLogin.Email);
+
+            if (token == null)
+            {
+                throw new Exception("Email is incorrect!");
+            }
+        }
+
+        public void CheckPassword(UserAuthDto userForLogin)
+        {
+            var user = _dataContext.Users.FirstOrDefault(u => u.Email == userForLogin.Email);
+            if (user == null)
+            {
+                throw new Exception("Incorrect Email");
+            }
+            Console.WriteLine(user );
+
+            var userForConfirmation = _dataContext.Users
+                .Where(t => t.Email == userForLogin.Email)
+                .Select(t => new UserForLoginConfirmationDto
+                {
+                    PasswordHash = t.PasswordHash
+                })
+                .FirstOrDefault();
+
+            string inputPasswordHash = _authHelp.GetPasswordHash(userForLogin.Password );
+            if (!inputPasswordHash.SequenceEqual(userForConfirmation.PasswordHash))
+            {
+                throw new Exception("Incorrect Password");
+            }
+
+
         }
 
     }
