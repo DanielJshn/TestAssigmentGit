@@ -1,6 +1,6 @@
 namespace testProd.auth
 {
-    public partial class UserForRegistrationDto
+    public partial class UserAuthDto
     {
 
         public string Name { get; set; } = "";
@@ -9,5 +9,4 @@ namespace testProd.auth
 
 
     }
-
 }
