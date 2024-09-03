@@ -72,6 +72,32 @@ namespace testProd.auth
             return handler.WriteToken(token);
         }
 
+        public string GenerateNewToken(string userEmail)
+        {
+
+            Claim[] claims = new Claim[]
+            {
+              new Claim("Email", userEmail)
+            };
+
+            string? tokenKeyString = _config.GetSection("AppSettings:TokenKey")?.Value;
+            SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKeyString ?? ""));
+            SigningCredentials credentials = new SigningCredentials(tokenKey, SecurityAlgorithms.HmacSha512Signature);
+            SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()
+
+            {
+                Subject = new ClaimsIdentity(claims),
+                SigningCredentials = credentials,
+                Expires = DateTime.Now.AddMonths(1)
+            };
+
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            SecurityToken newtoken = handler.CreateToken(descriptor);
+
+            return handler.WriteToken(newtoken);
+        }
+
+
 
 
     }
