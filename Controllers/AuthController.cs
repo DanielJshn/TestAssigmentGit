@@ -31,5 +31,18 @@ namespace testProd.auth
             }
             return Ok(new { Token = token });
         }
+
+        [AllowAnonymous]
+        [HttpPost("Login")]
+        public IActionResult Login(UserAuthDto userForLogin)
+        {
+            string newToken;
+            {
+                _authRepository.CheckEmail(userForLogin);
+                _authRepository.CheckPassword(userForLogin);
+                newToken = _authHelp.GenerateNewToken(userForLogin.Email);
+            }
+            return Ok(new { Token = newToken });
+        }
     }
 }
