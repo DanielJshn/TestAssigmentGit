@@ -1,15 +1,26 @@
 using Microsoft.EntityFrameworkCore;
-using testProd.Model;
+using testProd.auth;
 
 
 
 public class DataContext : DbContext
 {
+
+    private readonly IConfiguration _config;
+
+    public DataContext(IConfiguration config)
+    {
+        _config = config;
+    }
     public DbSet<User> Users { get; set; }
 
-    public DataContext(DbContextOptions<DataContext> options)
-        : base(options)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        if (!optionsBuilder.IsConfigured)
+        {
+            string connectionString = _config.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseSqlServer(connectionString); // Настройка для использования MSSQL
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

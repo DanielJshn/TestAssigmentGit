@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using testProd.Model;
+using testProd.auth;
 
 namespace testProd
 {

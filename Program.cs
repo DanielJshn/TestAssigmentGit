@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using testProd.auth;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>(options =>
@@ -8,6 +9,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<AuthHelp>();
+builder.Services.AddScoped<AuthRepository>();
 
 var app = builder.Build();
 
