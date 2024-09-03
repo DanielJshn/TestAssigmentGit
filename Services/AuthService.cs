@@ -1,6 +1,6 @@
 namespace testProd.auth
 {
-    public class AuthService : IAuthService
+   public class AuthService : IAuthService
     {
         private readonly IAuthRepository _authRepository;
         private readonly AuthHelp _authHelp;
@@ -11,18 +11,28 @@ namespace testProd.auth
             _authHelp = authHelp;
         }
 
-        public void CheckUser(UserAuthDto userForRegistration)
+        private void CheckUserExistence(string email, string errorMessage)
         {
-            var existingUser = _authRepository.GetUserByEmail(userForRegistration.Email);
-            if (existingUser != null)
+            var existingUser = _authRepository.GetUserByEmail(email);
+            if (existingUser == null)
             {
-                throw new Exception("User with this email already exists!");
+                throw new Exception(errorMessage);
             }
         }
+
+        public void CheckUser(UserAuthDto userForRegistration)
+        {
+            CheckUserExistence(userForRegistration.Email, "User with this email already exists!");
+        }
+
+        public void CheckEmail(UserAuthDto userForLogin)
+        {
+            CheckUserExistence(userForLogin.Email, "Email is incorrect!");
+        }
+
         public string ReturnToken(UserAuthDto userForRegistration)
         {
             string passwordHash = _authHelp.GetPasswordHash(userForRegistration.Password);
-            Console.WriteLine("hash" + passwordHash);
             string token = _authHelp.CreateToken(userForRegistration.Email);
 
             var tokenEntity = new User
@@ -34,8 +44,23 @@ namespace testProd.auth
 
             _authRepository.AddUser(tokenEntity);
 
-            Console.WriteLine("token" + token);
             return token;
+        }
+
+        public void CheckPassword(UserAuthDto userForLogin)
+        {
+            var user = _authRepository.GetUserByEmail(userForLogin.Email);
+            if (user == null)
+            {
+                throw new Exception("Incorrect Email");
+            }
+
+            string inputPasswordHash = _authHelp.GetPasswordHash(userForLogin.Password);
+
+            if (!inputPasswordHash.SequenceEqual(user.PasswordHash))
+            {
+                throw new Exception("Incorrect Password");
+            }
         }
     }
 }

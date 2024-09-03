@@ -9,12 +9,12 @@ namespace testProd.auth
     {
         private readonly AuthHelp _authHelp;
         private readonly IAuthService _authService;
-        private readonly IAuthRepository _authrep;
-        public Authorization(AuthHelp authHelp, IAuthService authService, IAuthRepository authrep)
+        
+        public Authorization(AuthHelp authHelp, IAuthService authService)
         {
             _authHelp = authHelp;
             _authService = authService;
-            _authrep = authrep;
+
         }
 
         [AllowAnonymous]
@@ -33,7 +33,7 @@ namespace testProd.auth
             }
             return Ok(new { Token = token });
         }
-        
+
 
         [AllowAnonymous]
         [HttpPost("Login")]
@@ -41,8 +41,8 @@ namespace testProd.auth
         {
             string newToken;
             {
-                _authrep.CheckEmail(userForLogin);
-                _authrep.CheckPassword(userForLogin);
+                _authService.CheckEmail(userForLogin);
+                _authService.CheckPassword(userForLogin);
                 newToken = _authHelp.GenerateNewToken(userForLogin.Email);
             }
             return Ok(new { Token = newToken });
