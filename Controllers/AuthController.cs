@@ -9,7 +9,7 @@ namespace testProd.auth
     {
         private readonly AuthHelp _authHelp;
         private readonly IAuthService _authService;
-        
+
         public Authorization(AuthHelp authHelp, IAuthService authService)
         {
             _authHelp = authHelp;
@@ -40,10 +40,17 @@ namespace testProd.auth
         public IActionResult Login(UserAuthDto userForLogin)
         {
             string newToken;
+            try
             {
-                _authService.CheckEmail(userForLogin);
-                _authService.CheckPassword(userForLogin);
-                newToken = _authHelp.GenerateNewToken(userForLogin.Email);
+                {
+                    _authService.CheckEmail(userForLogin);
+                    _authService.CheckPassword(userForLogin);
+                    newToken = _authHelp.GenerateNewToken(userForLogin.Email);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
             return Ok(new { Token = newToken });
         }

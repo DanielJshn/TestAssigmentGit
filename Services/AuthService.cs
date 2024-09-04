@@ -1,6 +1,6 @@
 namespace testProd.auth
 {
-   public class AuthService : IAuthService
+    public class AuthService : IAuthService
     {
         private readonly IAuthRepository _authRepository;
         private readonly AuthHelp _authHelp;
@@ -11,23 +11,29 @@ namespace testProd.auth
             _authHelp = authHelp;
         }
 
-        private void CheckUserExistence(string email, string errorMessage)
+        private bool CheckUserExists(string email)
         {
             var existingUser = _authRepository.GetUserByEmail(email);
-            if (existingUser == null)
-            {
-                throw new Exception(errorMessage);
-            }
+            Console.WriteLine(existingUser + "res");
+            return existingUser != null;
         }
 
         public void CheckUser(UserAuthDto userForRegistration)
         {
-            CheckUserExistence(userForRegistration.Email, "User with this email already exists!");
+            bool userExists = CheckUserExists(userForRegistration.Email);
+            if (userExists)
+            {
+                throw new Exception("User with this email already exists!");
+            }
         }
 
         public void CheckEmail(UserAuthDto userForLogin)
         {
-            CheckUserExistence(userForLogin.Email, "Email is incorrect!");
+            bool userExists = CheckUserExists(userForLogin.Email);
+            if (!userExists)
+            {
+                throw new Exception("User with this email already exists!");
+            }
         }
 
         public string ReturnToken(UserAuthDto userForRegistration)
