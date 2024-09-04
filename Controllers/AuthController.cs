@@ -24,7 +24,7 @@ namespace testProd.auth
             string token;
             try
             {
-                await _authService.ValidateRegistrationDataAsync(userForRegistration);
+                // await _authService.ValidateRegistrationDataAsync(userForRegistration);
                 await _authService.CheckUserAsync(userForRegistration);
                 token = await _authService.ReturnTokenAsync(userForRegistration);
             }
@@ -39,22 +39,26 @@ namespace testProd.auth
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public IActionResult Login(UserAuthDto userForLogin)
+        public async Task<IActionResult> Login(UserAuthDto userForLogin)
         {
             string newToken;
             try
             {
-                {
-                    _authService.CheckEmailAsync(userForLogin);
-                    _authService.CheckPasswordAsync(userForLogin);
-                    newToken = _authHelp.GenerateNewToken(userForLogin.Email);
-                }
+
+                await _authService.CheckEmailAsync(userForLogin);
+                Console.WriteLine("dd");
+                await _authService.CheckPasswordAsync(userForLogin);
+
+                newToken = _authHelp.GenerateNewToken(userForLogin.Email);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+
             return Ok(new { Token = newToken });
         }
+
+
     }
 }

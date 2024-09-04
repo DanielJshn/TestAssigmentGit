@@ -19,7 +19,7 @@ namespace testProd.auth
 
         public string GetPasswordHash(string password)
         {
-            // Получение ключа для хеширования из конфигурации
+           
             string? passwordKeyString = _config.GetSection("AppSettings:PasswordKey").Value;
             Console.WriteLine("token");
             if (string.IsNullOrEmpty(passwordKeyString))
@@ -29,10 +29,10 @@ namespace testProd.auth
 
             byte[] passwordKey = Encoding.ASCII.GetBytes(passwordKeyString);
 
-            // Хеширование пароля без соли
+          
             byte[] passwordHash = KeyDerivation.Pbkdf2(
                 password: password,
-                salt: passwordKey,  // Используйте ключ для хеширования
+                salt: passwordKey,  
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 1000000,
                 numBytesRequested: 256 / 8
@@ -45,20 +45,24 @@ namespace testProd.auth
 
         public string CreateToken(string userEmail)
         {
+         
             Claim[] claims = new Claim[]
             {
-        new Claim("Email", userEmail)
+        new Claim(ClaimTypes.Email, userEmail)
             };
 
             string? tokenKeyString = _config.GetSection("AppSettings:TokenKey").Value;
 
+      
             if (string.IsNullOrEmpty(tokenKeyString))
             {
                 throw new ArgumentException("TokenKey is not configured.");
             }
 
             SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKeyString));
-            SigningCredentials credentials = new SigningCredentials(tokenKey, SecurityAlgorithms.HmacSha512Signature);
+            SigningCredentials credentials = new SigningCredentials(tokenKey, SecurityAlgorithms.HmacSha256Signature);
+
+   
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(claims),
@@ -71,6 +75,7 @@ namespace testProd.auth
 
             return handler.WriteToken(token);
         }
+
 
         public string GenerateNewToken(string userEmail)
         {

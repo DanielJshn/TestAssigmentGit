@@ -10,26 +10,23 @@ public class TaskModel
     public TaskPriority Priority { get; set; } = TaskPriority.Medium;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-
-   
-    public User User { get; set; }
     public Guid UserId { get; set; }
 
     public void UpdateTimestamps()
     {
         UpdatedAt = DateTime.UtcNow;
     }
-    public enum TaskStatus
-    {
-        Pending,
-        InProgress,
-        Completed
-    }
+}
+public enum TaskStatus
+{
+    Pending,
+    InProgress,
+    Completed
+}
 
-    public enum TaskPriority
-    {
-        Low,
-        Medium,
-        High
-    }
+public enum TaskPriority
+{
+    Low,
+    Medium,
+    High
 }

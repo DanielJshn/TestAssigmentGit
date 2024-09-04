@@ -18,7 +18,6 @@ namespace testProd.auth
         private async Task<bool> CheckUserExistsAsync(string email)
         {
             var existingUser = await _authRepository.GetUserByEmailAsync(email);
-            Console.WriteLine(existingUser + "res");
             return existingUser != null;
         }
 
@@ -30,11 +29,19 @@ namespace testProd.auth
                 throw new Exception("User with this email already exists!");
             }
         }
-
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            var user = await _authRepository.GetUserByEmailAsync(email);
+            if (user == null)
+            {
+                throw new Exception("Incorrect Email");
+            }
+            return user;
+        }
         public async Task CheckEmailAsync(UserAuthDto userForLogin)
         {
             bool userExists = await CheckUserExistsAsync(userForLogin.Email);
-            if (!userExists)
+            if (userExists== null)
             {
                 throw new Exception("Incorrect Email");
             }
@@ -60,6 +67,8 @@ namespace testProd.auth
         public async Task CheckPasswordAsync(UserAuthDto userForLogin)
         {
             var user = await _authRepository.GetUserByEmailAsync(userForLogin.Email);
+
+            // Проверяем, если пользователя нет, то возвращаем ошибку "Incorrect Email"
             if (user == null)
             {
                 throw new Exception("Incorrect Email");
@@ -67,7 +76,7 @@ namespace testProd.auth
 
             string inputPasswordHash = _authHelp.GetPasswordHash(userForLogin.Password);
 
-            
+            // Если пароль неверный, возвращаем ошибку "Incorrect Password"
             if (!inputPasswordHash.Equals(user.PasswordHash))
             {
                 throw new Exception("Incorrect Password");
@@ -93,7 +102,7 @@ namespace testProd.auth
                 throw new InvalidOperationException("Email must contain '@' symbol.");
             }
 
-            return Task.CompletedTask; 
+            return Task.CompletedTask;
         }
     }
 }
