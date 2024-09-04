@@ -1,10 +1,13 @@
+using System.Threading.Tasks;
+
 namespace testProd.auth
 {
     public interface IAuthService
     {
-        void CheckUser(UserAuthDto userForRegistration);
-        string ReturnToken(UserAuthDto userForRegistration);
-        void CheckEmail(UserAuthDto userForLogin);
-        void CheckPassword(UserAuthDto userForLogin);
+        Task CheckUserAsync(UserAuthDto userForRegistration);
+        Task CheckEmailAsync(UserAuthDto userForLogin);
+        Task<string> ReturnTokenAsync(UserAuthDto userForRegistration);
+        Task CheckPasswordAsync(UserAuthDto userForLogin);
+        Task ValidateRegistrationDataAsync(UserAuthDto userForRegistration);
     }
 }

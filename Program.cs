@@ -22,7 +22,7 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseHsts(); // Добавьте это для обеспечения безопасности HTTPS
+    app.UseHsts(); 
 }
 
 app.UseHttpsRedirection();

@@ -1,3 +1,8 @@
+using System;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using testProd.auth;
+
 namespace testProd.auth
 {
     public class AuthRepository : IAuthRepository
@@ -9,15 +14,15 @@ namespace testProd.auth
             _dataContext = dataContext;
         }
 
-        public User GetUserByEmail(string email)
+        public async Task<User> GetUserByEmailAsync(string email)
         {
-            return _dataContext.Users.FirstOrDefault(u => u.Email == email);
+            return await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public void AddUser(User user)
+        public async Task AddUserAsync(User user)
         {
-            _dataContext.Users.Add(user);
-            _dataContext.SaveChanges();
+            await _dataContext.Users.AddAsync(user);
+            await _dataContext.SaveChangesAsync();
         }
     }
 }

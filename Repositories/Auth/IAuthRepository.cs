@@ -1,8 +1,10 @@
+using System.Threading.Tasks;
+
 namespace testProd.auth
 {
     public interface IAuthRepository
     {
-        User GetUserByEmail(string email);
-        void AddUser(User user);
+        Task<User> GetUserByEmailAsync(string email);
+        Task AddUserAsync(User user);
     }
 }

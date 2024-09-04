@@ -19,13 +19,14 @@ namespace testProd.auth
 
         [AllowAnonymous]
         [HttpPost("Register")]
-        public IActionResult Register(UserAuthDto userForRegistration)
+        public async Task<IActionResult> Register(UserAuthDto userForRegistration)
         {
             string token;
             try
             {
-                _authService.CheckUser(userForRegistration);
-                token = _authService.ReturnToken(userForRegistration);
+                await _authService.ValidateRegistrationDataAsync(userForRegistration);
+                await _authService.CheckUserAsync(userForRegistration);
+                token = await _authService.ReturnTokenAsync(userForRegistration);
             }
             catch (Exception ex)
             {
@@ -33,6 +34,7 @@ namespace testProd.auth
             }
             return Ok(new { Token = token });
         }
+
 
 
         [AllowAnonymous]
@@ -43,8 +45,8 @@ namespace testProd.auth
             try
             {
                 {
-                    _authService.CheckEmail(userForLogin);
-                    _authService.CheckPassword(userForLogin);
+                    _authService.CheckEmailAsync(userForLogin);
+                    _authService.CheckPasswordAsync(userForLogin);
                     newToken = _authHelp.GenerateNewToken(userForLogin.Email);
                 }
             }
