@@ -18,11 +18,22 @@ namespace testProd.auth
         {
             return await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
+        public async Task<User> GetUserByNameAsync(string name)
+        {
+            return await _dataContext.Users.FirstOrDefaultAsync(u => u.Username == name);
+        }
 
         public async Task AddUserAsync(User user)
         {
             await _dataContext.Users.AddAsync(user);
             await _dataContext.SaveChangesAsync();
+        }
+        public async Task<string> GetEmailByUserNameAsync(string name)
+        {
+            var user = await _dataContext.Users.FirstOrDefaultAsync(u => u.Username == name);
+
+            return user.Email;
+
         }
     }
 }

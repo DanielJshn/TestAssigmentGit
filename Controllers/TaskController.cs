@@ -39,6 +39,7 @@ namespace testProd.task
 
             var taskModel = new TaskModel
             {
+                Id = Guid.NewGuid(),
                 Title = taskDto.Title,
                 Description = taskDto.Description,
                 DueDate = taskDto.DueDate,

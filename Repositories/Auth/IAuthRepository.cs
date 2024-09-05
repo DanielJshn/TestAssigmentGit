@@ -6,5 +6,7 @@ namespace testProd.auth
     {
         Task<User> GetUserByEmailAsync(string email);
         Task AddUserAsync(User user);
+        Task<User> GetUserByNameAsync(string name);
+        Task<string> GetEmailByUserNameAsync(string name);
     }
 }

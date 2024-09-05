@@ -6,29 +6,27 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace testProd.auth
 {
-    public class AuthHelp
+    public class AuthHelp :IAuthHelp
     {
         private readonly IConfiguration _config;
-        private readonly DataContext _entity;
+        private const int TOKEN_EXPIRATION_MONTHS = 1;
+        private const string KEY_PASSWORD_KEY = "AppSettings:PasswordKey";
+        public static string KEY_TOKEN_KEY = "AppSettings:TokenKey";
 
-        public AuthHelp(IConfiguration config, DataContext entity)
+        public AuthHelp(IConfiguration config)
         {
             _config = config;
-            _entity = entity;
         }
 
         public string GetPasswordHash(string password)
         {
-           
-            string? passwordKeyString = _config.GetSection("AppSettings:PasswordKey").Value;
-            Console.WriteLine("token");
+            string? passwordKeyString = _config.GetSection(KEY_PASSWORD_KEY).Value;
             if (string.IsNullOrEmpty(passwordKeyString))
             {
                 throw new ArgumentException("PasswordKey is not configured.");
             }
 
             byte[] passwordKey = Encoding.ASCII.GetBytes(passwordKeyString);
-
           
             byte[] passwordHash = KeyDerivation.Pbkdf2(
                 password: password,
@@ -43,17 +41,16 @@ namespace testProd.auth
 
         }
 
-        public string CreateToken(string userEmail)
+        public string GenerateNewToken(string userEmail)
         {
          
             Claim[] claims = new Claim[]
             {
-        new Claim(ClaimTypes.Email, userEmail)
+                new Claim(ClaimTypes.Email, userEmail)
             };
 
-            string? tokenKeyString = _config.GetSection("AppSettings:TokenKey").Value;
+            string? tokenKeyString = _config.GetSection(KEY_TOKEN_KEY).Value;
 
-      
             if (string.IsNullOrEmpty(tokenKeyString))
             {
                 throw new ArgumentException("TokenKey is not configured.");
@@ -61,13 +58,11 @@ namespace testProd.auth
 
             SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKeyString));
             SigningCredentials credentials = new SigningCredentials(tokenKey, SecurityAlgorithms.HmacSha256Signature);
-
-   
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(claims),
                 SigningCredentials = credentials,
-                Expires = DateTime.Now.AddMonths(1)
+                Expires = DateTime.Now.AddMonths(TOKEN_EXPIRATION_MONTHS)
             };
 
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
@@ -75,35 +70,6 @@ namespace testProd.auth
 
             return handler.WriteToken(token);
         }
-
-
-        public string GenerateNewToken(string userEmail)
-        {
-
-            Claim[] claims = new Claim[]
-            {
-              new Claim("Email", userEmail)
-            };
-
-            string? tokenKeyString = _config.GetSection("AppSettings:TokenKey")?.Value;
-            SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKeyString ?? ""));
-            SigningCredentials credentials = new SigningCredentials(tokenKey, SecurityAlgorithms.HmacSha512Signature);
-            SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()
-
-            {
-                Subject = new ClaimsIdentity(claims),
-                SigningCredentials = credentials,
-                Expires = DateTime.Now.AddMonths(1)
-            };
-
-            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
-            SecurityToken newtoken = handler.CreateToken(descriptor);
-
-            return handler.WriteToken(newtoken);
-        }
-
-
-
 
     }
 }

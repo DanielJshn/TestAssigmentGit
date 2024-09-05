@@ -17,7 +17,7 @@ public class DataContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            string connectionString = _config.GetConnectionString("DefaultConnection");
+            string? connectionString = _config.GetConnectionString("DefaultConnection");
             optionsBuilder.UseSqlServer(connectionString);
         }
     }
