@@ -85,7 +85,7 @@ namespace testProd.auth
             bool emailCorrect = await CheckEmailExistsAsync(userForLogin.Email);
             bool userExists = await CheckNameExistsAsync(userForLogin.Name);
 
-            if (!emailCorrect && !userExists) // Если ни email, ни имя не существуют
+            if (!emailCorrect && !userExists) 
             {
                 throw new Exception("Incorrect email or username.");
             }

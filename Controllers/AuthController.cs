@@ -8,12 +8,12 @@ namespace testProd.auth
     [Route("users")]
     public class users : ControllerBase
     {
-        private readonly AuthHelp _authHelp;
+        
         private readonly IAuthService _authService;
 
-        public users(AuthHelp authHelp, IAuthService authService)
+        public users( IAuthService authService)
         {
-            _authHelp = authHelp;
+           
             _authService = authService;
         }
 

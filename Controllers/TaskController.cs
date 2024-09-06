@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using testProd.auth;
 
 namespace testProd.task
 {
@@ -11,47 +12,29 @@ namespace testProd.task
     public class TaskController : ControllerBase
     {
         private readonly DataContext _dataContext;
-        public TaskController(DataContext dataContext)
+        private readonly ITaskService _taskService;
+        public TaskController(DataContext dataContext, ITaskService taskService)
         {
             _dataContext = dataContext;
+            _taskService = taskService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostTask(TaskModelDto taskDto)
+        [Authorize]
+        public async Task<IActionResult> PostTask([FromBody] TaskModelDto taskDto)
         {
-            
-           
-            var email = User.FindFirstValue(ClaimTypes.Email);
-            Console.WriteLine("email is"+ email);
-
-            if (email == null)
+            User user;
+            try
             {
-                throw new Exception("User email not found in token.");
+                user = await _taskService.GetUserByTokenAsync(User);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
 
-            
-            var user = await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == email);
-
-            if (user == null)
-            {
-                return Unauthorized("User not found.");
-            }
-
-            var taskModel = new TaskModel
-            {
-                Id = Guid.NewGuid(),
-                Title = taskDto.Title,
-                Description = taskDto.Description,
-                DueDate = taskDto.DueDate,
-                Status = taskDto.Status,
-                Priority = taskDto.Priority,
-                UserId = user.Id 
-            };
-
-            await _dataContext.Tasks.AddAsync(taskModel);
-            await _dataContext.SaveChangesAsync();
-            return Ok(taskModel);
+            var response = await _taskService.CreateTaskAsync(taskDto, user.Id);
+            return Ok(response);
         }
-
     }
 }
