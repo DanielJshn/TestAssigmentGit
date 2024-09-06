@@ -40,8 +40,7 @@ public class DataContext : DbContext
                         .HasDefaultValueSql("GETUTCDATE()");
 
                 entity.Property(t => t.UpdatedAt)
-                        .HasDefaultValueSql("GETUTCDATE()")
-                        .ValueGeneratedOnAddOrUpdate();
+                        .HasDefaultValueSql("GETUTCDATE()");
 
             });
 

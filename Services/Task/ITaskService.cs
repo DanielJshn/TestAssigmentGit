@@ -10,6 +10,7 @@ namespace testProd.task
         Task<TaskResponseDto> GetSingleTaskAsync(Guid id, Guid userId);
         Task<IEnumerable<TaskResponseDto>> GetTasksAsync(Guid userId, int? status, DateTime? dueDate, int? priority);
         Task<TaskResponseDto> UpdateTaskAsync(Guid id, TaskModelDto taskDto, Guid userId);
+        Task DeleteTaskAsync(Guid id, Guid userId);
     }
 
 }

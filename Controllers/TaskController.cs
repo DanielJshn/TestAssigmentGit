@@ -72,7 +72,44 @@ namespace testProd.task
             }
         }
 
-        
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateTask(Guid id, [FromBody] TaskModelDto taskDto)
+        {
+            try
+            {
+                var user = await _taskService.GetUserByTokenAsync(User);
+                var userId = user.Id;
+
+                var updatedTask = await _taskService.UpdateTaskAsync(id, taskDto, userId);
+                return Ok(updatedTask);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteTask(Guid id)
+        {
+            try
+            {
+                var user = await _taskService.GetUserByTokenAsync(User);
+                var userId = user.Id;
+                await _taskService.DeleteTaskAsync(id, userId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
 
     }
 }

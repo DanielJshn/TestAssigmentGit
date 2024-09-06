@@ -1,3 +1,4 @@
+using System.Data;
 using System.Security.Claims;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -91,19 +92,38 @@ namespace testProd.task
                 throw new UnauthorizedAccessException("You do not have permission to update this task.");
             }
 
-            // Обновляем поля задачи, кроме CreatedAt
             task.Title = taskDto.Title;
             task.Description = taskDto.Description;
             task.DueDate = taskDto.DueDate;
             task.Status = Enum.Parse<TaskStatus>(taskDto.Status, true);
             task.Priority = Enum.Parse<TaskPriority>(taskDto.Priority, true);
-            task.UpdatedAt = DateTime.UtcNow; // Обновляем дату обновления
+            task.UpdatedAt = DateTime.UtcNow;
 
             await _taskRepository.UpdateAsync(task);
-            await _taskRepository.SaveChangesAsync();
 
             return _mapper.Map<TaskResponseDto>(task);
         }
+
+
+        public async Task DeleteTaskAsync(Guid id, Guid userId)
+        {
+            var task = await _taskRepository.GetTaskByIdAsync(id);
+
+            if (task == null)
+            {
+                throw new KeyNotFoundException("Task not found.");
+            }
+
+            if (task.UserId != userId)
+            {
+                throw new UnauthorizedAccessException("You do not have permission to delete this task.");
+            }
+
+            _taskRepository.Delete(task);
+            await _taskRepository.SaveChangesAsync();
+        }
+
+
 
     }
 

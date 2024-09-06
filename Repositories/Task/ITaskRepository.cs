@@ -9,5 +9,6 @@ namespace testProd.task
         Task UpdateAsync(TaskModel task);
         Task<TaskModel> GetTaskByIdAsync(Guid id);
         Task<IEnumerable<TaskModel>> GetTasksAsync(Guid userId, int? status, DateTime? dueDate, int? priority);
+        void Delete(TaskModel task);
     }
 }

@@ -65,7 +65,12 @@ namespace testProd.task
         public async Task UpdateAsync(TaskModel task)
         {
             _dataContext.Tasks.Update(task);
+
             await _dataContext.SaveChangesAsync();
+        }
+        public void Delete(TaskModel task)
+        {
+            _dataContext.Tasks.Remove(task);
         }
 
 
