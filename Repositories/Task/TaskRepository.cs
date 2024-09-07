@@ -14,6 +14,7 @@ namespace testProd.task
         public async Task AddAsync(TaskModel task)
         {
             await _dataContext.Tasks.AddAsync(task);
+            await _dataContext.SaveChangesAsync();
         }
 
         public async Task<TaskModel> GetByIdAsync(Guid id)
@@ -29,10 +30,7 @@ namespace testProd.task
                 .ToListAsync();
         }
 
-        public async Task SaveChangesAsync()
-        {
-            await _dataContext.SaveChangesAsync();
-        }
+      
         public async Task<IQueryable<TaskModel>> GetTasksByUserId(Guid userId)
         {
             return _dataContext.Tasks.Where(t => t.UserId == userId);
@@ -71,8 +69,8 @@ namespace testProd.task
         public void Delete(TaskModel task)
         {
             _dataContext.Tasks.Remove(task);
+            _dataContext.SaveChangesAsync();
         }
-
 
     }
 }

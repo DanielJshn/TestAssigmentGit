@@ -10,11 +10,12 @@ namespace testProd.task
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
-    public class taskController : ControllerBase
+    [Route("task")]
+    public class TaskController : ControllerBase
     {
+
         private readonly ITaskService _taskService;
-        public taskController(ITaskService taskService)
+        public TaskController(ITaskService taskService)
         {
             _taskService = taskService;
         }
@@ -36,6 +37,7 @@ namespace testProd.task
             var response = await _taskService.CreateTaskAsync(taskDto, user.Id);
             return Ok(response);
         }
+
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetTasks([FromQuery] int? status, [FromQuery] DateTime? dueDate, [FromQuery] int? priority)
@@ -107,9 +109,5 @@ namespace testProd.task
                 return BadRequest(ex.Message);
             }
         }
-
-
-
-
     }
 }

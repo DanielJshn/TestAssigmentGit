@@ -48,7 +48,6 @@ namespace testProd.task
             taskModel.UpdatedAt = DateTime.UtcNow;
 
             await _taskRepository.AddAsync(taskModel);
-            await _taskRepository.SaveChangesAsync();
 
             return _mapper.Map<TaskResponseDto>(taskModel);
         }
@@ -58,7 +57,6 @@ namespace testProd.task
 
             var tasks = await _taskRepository.GetTasksAsync(userId, status, dueDate, priority);
 
-            // Маппим результаты
             return _mapper.Map<IEnumerable<TaskResponseDto>>(tasks);
         }
 
@@ -120,10 +118,7 @@ namespace testProd.task
             }
 
             _taskRepository.Delete(task);
-            await _taskRepository.SaveChangesAsync();
         }
-
-
 
     }
 

@@ -11,9 +11,9 @@ namespace testProd.task
         public MappingProfile()
         {
            CreateMap<TaskModelDto, TaskModel>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore()) // Игнорируем Id при маппинге
-            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore()) // Игнорируем CreatedAt
-            .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore()); // Игнорируем UpdatedAt
+            .ForMember(dest => dest.Id, opt => opt.Ignore()) 
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
 
         CreateMap<TaskModel, TaskResponseDto>();
         }

@@ -6,14 +6,13 @@ namespace testProd.auth
 {
     [ApiController]
     [Route("users")]
-    public class users : ControllerBase
+    public class AuthController : ControllerBase
     {
         
         private readonly IAuthService _authService;
 
-        public users( IAuthService authService)
-        {
-           
+        public AuthController( IAuthService authService)
+        {  
             _authService = authService;
         }
 
