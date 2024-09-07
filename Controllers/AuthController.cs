@@ -8,11 +8,11 @@ namespace testProd.auth
     [Route("users")]
     public class AuthController : ControllerBase
     {
-        
+
         private readonly IAuthService _authService;
 
-        public AuthController( IAuthService authService)
-        {  
+        public AuthController(IAuthService authService)
+        {
             _authService = authService;
         }
 
@@ -23,16 +23,16 @@ namespace testProd.auth
             string token;
             try
             {
-                // await _authService.ValidateRegistrationDataAsync(userForRegistration);
+                await _authService.ValidateRegistrationDataAsync(userForRegistration);
                 await _authService.CheckNameAsync(userForRegistration);
                 await _authService.CheckUserAsync(userForRegistration);
                 token = await _authService.GenerateTokenAsync(userForRegistration);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(success: false, message: ex.Message));
             }
-            return Ok(new { Token = token });
+            return Ok(new ApiResponse(success: true, data: new { Token = token }));
         }
 
         [AllowAnonymous]
@@ -44,15 +44,15 @@ namespace testProd.auth
             {
                 await _authService.CheckEmailOrNameAsync(userForLogin);
                 await _authService.CheckPasswordAsync(userForLogin);
-                newToken =await _authService.GenerateTokenForLogin(userForLogin);
+                newToken = await _authService.GenerateTokenForLogin(userForLogin);
 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(success: false, message: ex.Message));
             }
 
-            return Ok(new { Token = newToken });
+            return Ok(new ApiResponse(success: true, data: new { Token = newToken }));
         }
 
 
