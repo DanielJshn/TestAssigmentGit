@@ -52,12 +52,20 @@ namespace testProd.task
             return _mapper.Map<TaskResponseDto>(taskModel);
         }
 
-        public async Task<IEnumerable<TaskResponseDto>> GetTasksAsync(Guid userId, int? status, DateTime? dueDate, int? priority)
+        public async Task<PaginatedList<TaskResponseDto>> GetTasksAsync
+        (
+            Guid userId,
+            int pageIndex,
+            int pageSize,
+            int? status,
+            DateTime? dueDate,
+            int? priority
+        )
         {
 
-            var tasks = await _taskRepository.GetTasksAsync(userId, status, dueDate, priority);
+            var tasks = await _taskRepository.GetTasksAsync(userId, pageIndex, pageSize, status, dueDate, priority);
 
-            return _mapper.Map<IEnumerable<TaskResponseDto>>(tasks);
+            return _mapper.Map<PaginatedList<TaskResponseDto>>(tasks);
         }
 
         public async Task<TaskResponseDto> GetSingleTaskAsync(Guid id, Guid userId)
