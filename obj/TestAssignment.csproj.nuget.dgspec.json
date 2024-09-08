@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\TestAssignment.csproj": {}
+    "C:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\TestAssignment.csproj": {}
   },
   "projects": {
-    "c:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\TestAssignment.csproj": {
+    "C:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\TestAssignment.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\TestAssignment.csproj",
+        "projectUniqueName": "C:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\TestAssignment.csproj",
         "projectName": "TestAssignment",
-        "projectPath": "c:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\TestAssignment.csproj",
+        "projectPath": "C:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\TestAssignment.csproj",
         "packagesPath": "C:\\Users\\DanielDobosh\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\obj\\",
+        "outputPath": "C:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\DanielDobosh\\AppData\\Roaming\\NuGet\\NuGet.Config",
