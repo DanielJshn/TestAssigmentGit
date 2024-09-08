@@ -10,9 +10,10 @@ This is an API that allows users to create accounts and manage their tasks.
 4. Restore the libraries with this command: `dotnet restore`
 5. Change the connection string for MSSQL in the `appsettings.json`  file
 6. Run the migrations to setup DB schema with this command: `dotnet tool install --global dotnet-ef`
-7. Apply migrations with this command: `dotnet ef database update`
-8. Build the project with this command: `dotnet build`
-9. Run the project with this command: `dotnet watch run`
+7. Create database by running this command:`dotnet ef migrations add InitialCreate`
+8. Apply migrations with this command: `dotnet ef database update`
+9. Build the project with this command: `dotnet build`
+10. Run the project with this command: `dotnet watch run`
 
 ## Api Documentation
 
