@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\DanielDobosh\\TestAssignment\\TestAssignment.csproj": {}
+    "C:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\TestAssignment.csproj": {}
   },
   "projects": {
-    "C:\\Users\\DanielDobosh\\TestAssignment\\TestAssignment.csproj": {
+    "C:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\TestAssignment.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DanielDobosh\\TestAssignment\\TestAssignment.csproj",
+        "projectUniqueName": "C:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\TestAssignment.csproj",
         "projectName": "TestAssignment",
-        "projectPath": "C:\\Users\\DanielDobosh\\TestAssignment\\TestAssignment.csproj",
+        "projectPath": "C:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\TestAssignment.csproj",
         "packagesPath": "C:\\Users\\DanielDobosh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\DanielDobosh\\TestAssignment\\obj\\",
+        "outputPath": "C:\\Users\\DanielDobosh\\Desktop\\TestAssignment\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\DanielDobosh\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -45,9 +45,39 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.4, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.aspnetcore.Authentication": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.aspnetcore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.8, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
