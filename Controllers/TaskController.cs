@@ -31,28 +31,34 @@ namespace testProd.task
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(success: false, message: ex.Message));
             }
 
             var response = await _taskService.CreateTaskAsync(taskDto, user.Id);
-            return Ok(response);
+            return Ok(new ApiResponse(success: true, data: response));
         }
+
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetTasks([FromQuery] int? status, [FromQuery] DateTime? dueDate, [FromQuery] int? priority)
+        public async Task<IActionResult> GetTasks(
+        [FromQuery] int? status,
+        [FromQuery] DateTime? dueDate,
+        [FromQuery] int? priority,
+        [FromQuery] int pageIndex = 1,
+        [FromQuery] int pageSize = 10)
         {
 
             User user;
             try
             {
                 user = await _taskService.GetUserByTokenAsync(User);
-                var tasks = await _taskService.GetTasksAsync(user.Id, status, dueDate, priority);
-                return Ok(tasks);
+                var tasks = await _taskService.GetTasksAsync(user.Id, pageIndex, pageSize, status, dueDate, priority);
+                return Ok(new ApiResponse(success: true, data: tasks));
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(success: false, message: ex.Message));
             }
 
         }
@@ -66,11 +72,11 @@ namespace testProd.task
                 var user = await _taskService.GetUserByTokenAsync(User);
                 var userId = user.Id;
                 var taskResponse = await _taskService.GetSingleTaskAsync(id, userId);
-                return Ok(taskResponse);
+                return Ok(new ApiResponse(success: true, data: taskResponse));
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(success: false, message: ex.Message));
             }
         }
 
@@ -84,11 +90,11 @@ namespace testProd.task
                 var userId = user.Id;
 
                 var updatedTask = await _taskService.UpdateTaskAsync(id, taskDto, userId);
-                return Ok(updatedTask);
+                return Ok(new ApiResponse(success: true, data: updatedTask));
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(success: false, message: ex.Message));
             }
 
         }
@@ -102,11 +108,11 @@ namespace testProd.task
                 var user = await _taskService.GetUserByTokenAsync(User);
                 var userId = user.Id;
                 await _taskService.DeleteTaskAsync(id, userId);
-                return Ok();
+                return Ok(new ApiResponse(success: true));
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(success: false, message: ex.Message));
             }
         }
     }
