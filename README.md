@@ -221,5 +221,6 @@ The response schema is flexible and allows to return the response data and error
 }
 ```
 
-
+--------------------------------------------------------------------------------
+Link to Postman collection: https://drive.google.com/file/d/18i8I5R_M9odvUPlPyXFTM4X_nHzUDH-y/view?usp=sharing
 
