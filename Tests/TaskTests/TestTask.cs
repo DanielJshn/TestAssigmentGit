@@ -117,15 +117,15 @@ public class TaskControllerTests
         ClassicAssert.IsNotNull(actualPaginatedTasks, "Expected non-null data in response.");
 
         // Compare paginated list properties
-        ClassicAssert.AreEqual(paginatedTasks.PageIndex, actualPaginatedTasks.PageIndex, "PageIndex does not match.");
-        ClassicAssert.AreEqual(paginatedTasks.TotalPages, actualPaginatedTasks.TotalPages, "TotalPages does not match.");
+        ClassicAssert.AreEqual(paginatedTasks.PageIndex, actualPaginatedTasks?.PageIndex, "PageIndex does not match.");
+        ClassicAssert.AreEqual(paginatedTasks.TotalPages, actualPaginatedTasks?.TotalPages, "TotalPages does not match.");
 
         // Compare the tasks list
-        ClassicAssert.AreEqual(tasks.Count, actualPaginatedTasks.Items.Count, "Task counts do not match.");
+        ClassicAssert.AreEqual(tasks.Count, actualPaginatedTasks?.Items.Count, "Task counts do not match.");
         for (int i = 0; i < tasks.Count; i++)
         {
-            ClassicAssert.AreEqual(tasks[i].Title, actualPaginatedTasks.Items[i].Title, $"Task title at index {i} does not match.");
-            ClassicAssert.AreEqual(tasks[i].Description, actualPaginatedTasks.Items[i].Description, $"Task description at index {i} does not match.");
+            ClassicAssert.AreEqual(tasks[i].Title, actualPaginatedTasks?.Items[i].Title, $"Task title at index {i} does not match.");
+            ClassicAssert.AreEqual(tasks[i].Description, actualPaginatedTasks?.Items[i].Description, $"Task description at index {i} does not match.");
         }
     }
 
@@ -187,5 +187,41 @@ public class TaskControllerTests
         ClassicAssert.IsNotNull(result, "Expected BadRequestObjectResult but got null.");
         ClassicAssert.AreEqual(400, result?.StatusCode, "Expected status code 400.");
         ClassicAssert.AreEqual("Error deleting task", ((ApiResponse)result!.Value!).Message, "Expected error message.");
+    }
+
+    [Test]
+    public async Task GetTasks_ShouldReturnEmptyList_WhenUserHasNoTasks()
+    {
+        // Arrange
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            Username = "your_username",
+            Email = "your_email@example.com",
+            PasswordHash = "hashed_password"
+        };
+
+        // Create an empty paginated task list
+        var emptyTaskList = new PaginatedList<TaskResponseDto>(new List<TaskResponseDto>(), 1, 1);
+
+        _mockTaskService?.Setup(s => s.GetUserByTokenAsync(It.IsAny<ClaimsPrincipal>()))
+                         .ReturnsAsync(user);
+
+        _mockTaskService?.Setup(s => s.GetTasksAsync(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>(), null, null, null))
+                         .ReturnsAsync(emptyTaskList);
+
+        // Act
+        var result = await _controller!.GetTasks(null, null, null) as OkObjectResult;
+
+        // Assert
+        ClassicAssert.IsNotNull(result, "Expected OkObjectResult but got null.");
+        ClassicAssert.AreEqual(200, result?.StatusCode, "Expected status code 200.");
+        ClassicAssert.IsTrue(((ApiResponse)result!.Value!).Success, "Expected success response.");
+
+        // Verify that the task list is empty
+        var actualApiResponse = (ApiResponse)result!.Value!;
+        var actualTaskList = actualApiResponse.Data as PaginatedList<TaskResponseDto>;
+        ClassicAssert.IsNotNull(actualTaskList, "Expected non-null task list in response.");
+        ClassicAssert.AreEqual(0, actualTaskList!.Items.Count, "Expected an empty task list.");
     }
 }

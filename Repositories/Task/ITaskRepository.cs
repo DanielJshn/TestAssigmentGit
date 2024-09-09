@@ -16,6 +16,6 @@ namespace testProd.task
             DateTime? dueDate,
             int? priority
         );
-        void Delete(TaskModel task);
+        Task Delete(TaskModel task);
     }
 }

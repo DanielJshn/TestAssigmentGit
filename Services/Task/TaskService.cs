@@ -9,15 +9,15 @@ namespace testProd.task
     public class TaskService : ITaskService
     {
         private readonly ITaskRepository _taskRepository;
+        private readonly IAuthRepository _authRepository;
         private readonly IMapper _mapper;
-        private readonly DataContext _dataContext;
         private readonly ILog _logger;
 
-        public TaskService(ITaskRepository taskRepository, IMapper mapper, DataContext dataContext, ILog logger)
+        public TaskService(ITaskRepository taskRepository, IAuthRepository authRepository, IMapper mapper, ILog logger)
         {
             _taskRepository = taskRepository;
+            _authRepository = authRepository;
             _mapper = mapper;
-            _dataContext = dataContext;
             _logger = logger;
         }
 
@@ -32,7 +32,7 @@ namespace testProd.task
                 throw new UnauthorizedAccessException("User email not found in token.");
             }
 
-            var user = await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _authRepository.GetUserByEmailAsync(email);
             if (user == null)
             {
                 _logger.LogWarning("User with email {Email} not found.", email);
@@ -45,6 +45,11 @@ namespace testProd.task
 
         public async Task<TaskResponseDto> CreateTaskAsync(TaskModelDto taskDto, Guid userId)
         {
+
+            if (string.IsNullOrWhiteSpace(taskDto.Title))
+            {
+                throw new Exception("Title is required"); ;
+            }
             _logger.LogInfo("Creating new task for user {UserId}.", userId);
 
             if (string.IsNullOrEmpty(taskDto.Title))
@@ -154,7 +159,7 @@ namespace testProd.task
                 throw new UnauthorizedAccessException("You do not have permission to delete this task.");
             }
 
-            _taskRepository.Delete(task);
+            await _taskRepository.Delete(task);
 
             _logger.LogInfo("Task {TaskId} deleted successfully for user {UserId}.", id, userId);
         }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using testProd.auth;
 
 namespace testProd.task
 {
@@ -29,7 +30,6 @@ namespace testProd.task
                 .Where(t => t.UserId == userId)
                 .ToListAsync();
         }
-
 
         public async Task<IQueryable<TaskModel>> GetTasksByUserId(Guid userId)
         {
@@ -83,10 +83,11 @@ namespace testProd.task
 
             await _dataContext.SaveChangesAsync();
         }
-        public void Delete(TaskModel task)
+
+        public async Task Delete(TaskModel task)
         {
             _dataContext.Tasks.Remove(task);
-            _dataContext.SaveChangesAsync();
+            await _dataContext.SaveChangesAsync();
         }
 
     }
